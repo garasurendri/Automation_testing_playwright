@@ -1,0 +1,46 @@
+from playwright.sync_api import sync_playwright, expect
+
+def test_automation_store():
+
+    with sync_playwright() as p:
+
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+
+        page.goto("https://automationteststore.com/index.php?rt=account/create")
+
+        page.fill("#AccountFrm_firstname", "Surendri")
+        page.fill("#AccountFrm_lastname", "G")
+        page.fill("#AccountFrm_email", "surendri12345@gmail.com")
+        page.fill("#AccountFrm_telephone", "9876543210")
+        page.fill("#AccountFrm_address_1", "Visakhapatnam")
+        page.fill("#AccountFrm_city", "Visakhapatnam")
+        page.select_option("#AccountFrm_country_id", label="India")
+        page.select_option("#AccountFrm_zone_id", label="Andhra Pradesh")
+        page.fill("#AccountFrm_postcode", "530001")
+        page.fill("#AccountFrm_loginname", "surendri12345")
+        page.fill("#AccountFrm_password", "Surendri@123")
+        page.fill("#AccountFrm_confirm", "Surendri@123")
+        page.check("#AccountFrm_agree")
+        page.click('button[title="Continue"]')
+        page.wait_for_timeout(300)
+        page.goto("https://automationteststore.com/index.php?rt=account/login")
+        page.fill("#loginFrm_loginname", "surendri12345")
+        page.fill("#loginFrm_password", "Surendri@123")
+        page.click('button[title="Login"]')
+        page.wait_for_timeout(3000)
+        expect(page).to_have_url("https://automationteststore.com/index.php?rt=account/account")
+        page.wait_for_timeout(600)
+        page.fill("#filter_keyword", "Shampoo")
+        page.keyboard.press("Enter")
+        page.wait_for_timeout(300)
+        page.locator(".prdocutname").first.click()
+        page.wait_for_timeout(3000)
+        page.locator(".cart").click()
+        page.wait_for_timeout(3000)
+        page.click("#cart_checkout1")
+        page.wait_for_timeout(5000)
+        page.click('button[title="Login"]')
+        page.goto("https://automationteststore.com/index.php?rt=account/logout")
+        page.wait_for_timeout(20000000)
+        browser.close()
